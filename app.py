@@ -1,3 +1,3 @@
-pip install streamlit
+import streamlit
 
 streamlit.title('Hello World!')
