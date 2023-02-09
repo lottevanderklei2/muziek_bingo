@@ -17,18 +17,22 @@ if uploaded_file is not None:
     # Can be used wherever a "file-like" object is accepted:
     dataframe = pd.read_csv(uploaded_file)
     st.write(dataframe)
- 
-card_num = st.number_input('Insert number of cards')
-st.write('The current number is ', card_num)
+else: 
+    st.text('No file uploaded')
+
+playlist = pd.DataFrame(dataframe)  
+# card_num = st.number_input('Insert number of cards')
+# st.write('The current number is ', card_num)
 
 random_seed = st.number_input('Insert your favorite number')
 st.write('The current number is ', random_seed)
 
-playlist = pd.DataFrame(dataframe)    
-if card_num is not None:
-    aantal_kaarten = card_num
-else: 
-    aantal_kaarten = 4
+aantal_kaarten = 2
+  
+# if card_num is not None:
+#     aantal_kaarten = card_num
+# else: 
+#     aantal_kaarten = 4
 seed_num = random_seed
 
 def kaart_generator(playlist, seed_num):
