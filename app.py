@@ -47,5 +47,6 @@ def bingo_kaarten_generator(playlist, aantal_kaarten, seed_num):
         kaarten_list.append(kaart_generator(playlist, seed_num + i))
     return kaarten_list
 
-st.dataframe(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[0])
+for i in range(0, aantal_kaarten):
+    st.dataframe(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[i])
 
