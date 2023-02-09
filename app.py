@@ -24,7 +24,7 @@ playlist = pd.DataFrame(dataframe)
 # card_num = st.number_input('Insert number of cards')
 # st.write('The current number is ', card_num)
 
-random_seed = st.number_input('Insert your favorite number')
+random_seed = st.number_input('Insert your favorite number', step=1)
 st.write('The current number is ', random_seed)
 
 aantal_kaarten = 2
