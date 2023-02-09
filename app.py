@@ -22,10 +22,14 @@ if uploaded_file is not None:
     # Can be used wherever a "file-like" object is accepted:
     dataframe = pd.read_csv(uploaded_file)
     st.write(dataframe)
+    
+number = st.number_input('Insert your favorite number')
+st.write('The current number is ', number)
+
 
 playlist = pd.DataFrame(dataframe)    
 aantal_kaarten = 2
-seed_num = 2407
+seed_num = number
 
 def kaart_generator(playlist, seed_num):
 #     df = pd.read_csv(playlist, header = None)
