@@ -1,7 +1,3 @@
-# import streamlit
-
-# streamlit.title('Hello World!')
-
 import streamlit as st
 import pandas as pd
 from io import StringIO
@@ -23,3 +19,32 @@ if uploaded_file is not None:
     # Can be used wherever a "file-like" object is accepted:
     dataframe = pd.read_csv(uploaded_file)
     st.write(dataframe)
+
+playlist = dataframe
+aantal_kaarten = 2
+seed_num = 2407
+
+def kaart_generator(playlist, seed_num):
+    df = pd.read_csv(playlist, header = None)
+    random.seed(seed_num)
+    nums = list(range(1, 51)) 
+    random.shuffle(nums)
+    df['random'] = nums
+    new_df = df.sort_values("random")
+    data = list(zip(new_df[1][0:5], 
+        new_df[1][5:10],
+        new_df[1][10:15],
+        new_df[1][15:20],
+        new_df[1][20:25]))
+    df2 = pd.DataFrame(data)
+    df2[2][2] = "BINGO"
+    return df2
+
+def bingo_kaarten_generator(playlist, aantal_kaarten, seed_num):
+    kaarten_list = []
+    for i in range(0, aantal_kaarten):
+        kaarten_list.append(kaart_generator(playlist, seed_num + i))
+    return kaarten_list
+
+st.dataframe(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[0])
+
