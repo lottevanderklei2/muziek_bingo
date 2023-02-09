@@ -20,20 +20,21 @@ if uploaded_file is not None:
 else: 
     st.text('No file uploaded')
 
-playlist = pd.DataFrame(dataframe)  
-# card_num = st.number_input('Insert number of cards')
-# st.write('The current number is ', card_num)
+playlist = pd.DataFrame(dataframe) 
 
 random_seed = st.number_input('Insert your favorite number', step=1)
 st.write('The current number is ', random_seed)
-
-aantal_kaarten = 2
-  
-# if card_num is not None:
-#     aantal_kaarten = card_num
-# else: 
-#     aantal_kaarten = 4
 seed_num = random_seed
+
+card_num = st.number_input('Insert number of cards', step = 1 )
+st.write('The current number is ', card_num)
+# aantal_kaarten = card_num
+  
+if card_num is not None:
+    aantal_kaarten = card_num
+else: 
+    aantal_kaarten = 4
+
 
 def kaart_generator(playlist, seed_num):
     random.seed(seed_num)
