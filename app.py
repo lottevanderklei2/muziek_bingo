@@ -5,17 +5,6 @@ from io import StringIO
 
 import streamlit as st
 
-# bingo = st.file_uploader("upload file", type={"csv", "txt"})
-# if bingo is not None:
-#     df = pd.read_csv(bingo)
-# st.write(df)
-
-# uploaded_files = st.file_uploader("Choose a CSV file", accept_multiple_files=True)
-# for uploaded_file in uploaded_files:
-#     bytes_data = uploaded_file.read()
-#     st.write("filename:", uploaded_file.name)
-#     st.write(bytes_data)
-
 uploaded_file = st.file_uploader("Choose a file")
 if uploaded_file is not None:
     # To read file as bytes:
@@ -28,14 +17,13 @@ if uploaded_file is not None:
 
     # To read file as string:
     string_data = stringio.read()
-    st.write(string_data)
+#     st.write(string_data)
 
     # Can be used wherever a "file-like" object is accepted:
     dataframe = pd.read_csv(uploaded_file)
-    st.write(dataframe)
+#     st.write(dataframe)
 
 playlist = pd.DataFrame(dataframe)    
-# playlist = dataframe
 aantal_kaarten = 2
 seed_num = 2407
 
