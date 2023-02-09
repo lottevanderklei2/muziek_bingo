@@ -33,17 +33,18 @@ if uploaded_file is not None:
     dataframe = pd.read_csv(uploaded_file)
     st.write(dataframe)
 
-playlist = dataframe
+playlist = pd.DataFrame(dataframe)    
+# playlist = dataframe
 aantal_kaarten = 2
 seed_num = 2407
 
 def kaart_generator(playlist, seed_num):
-    df = pd.read_csv(playlist, header = None)
+#     df = pd.read_csv(playlist, header = None)
     random.seed(seed_num)
     nums = list(range(1, 51)) 
     random.shuffle(nums)
-    df['random'] = nums
-    new_df = df.sort_values("random")
+    playlist['random'] = nums
+    new_df = playlist.sort_values("random")
     data = list(zip(new_df[1][0:5], 
         new_df[1][5:10],
         new_df[1][10:15],
