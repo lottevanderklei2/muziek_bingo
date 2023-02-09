@@ -4,11 +4,16 @@ from io import StringIO
 
 import streamlit as st
 
-uploaded_files = st.file_uploader("Choose a CSV file", accept_multiple_files=True)
-for uploaded_file in uploaded_files:
-    bytes_data = uploaded_file.read()
-    st.write("filename:", uploaded_file.name)
-    st.write(bytes_data)
+bingo = st.file_uploader("upload file", type={"csv", "txt"})
+if bingo is not None:
+    df = pd.read_csv(bingo)
+st.write(df)
+
+# uploaded_files = st.file_uploader("Choose a CSV file", accept_multiple_files=True)
+# for uploaded_file in uploaded_files:
+#     bytes_data = uploaded_file.read()
+#     st.write("filename:", uploaded_file.name)
+#     st.write(bytes_data)
 
 # uploaded_file = st.file_uploader("Choose a file")
 # if uploaded_file is not None:
@@ -28,7 +33,7 @@ for uploaded_file in uploaded_files:
 #     dataframe = pd.read_csv(uploaded_file)
 #     st.write(dataframe)
 
-playlist = bytes_data
+playlist = df
 aantal_kaarten = 2
 seed_num = 2407
 
