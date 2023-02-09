@@ -18,18 +18,20 @@ if uploaded_file is not None:
     dataframe = pd.read_csv(uploaded_file)
     st.write(dataframe)
  
-aantal_kaarten = st.number_input('Insert your favorite number')
-st.write('The current number is ', aantal_kaarten)
+card_num = st.number_input('Insert number of cards')
+st.write('The current number is ', card_num)
 
-seed_num = st.number_input('Insert your favorite number')
-st.write('The current number is ', seed_num)
+random_seed = st.number_input('Insert your favorite number')
+st.write('The current number is ', random_seed)
 
 playlist = pd.DataFrame(dataframe)    
-# aantal_kaarten = 2
-# seed_num = random_seed
+if card_num is not None:
+    aantal_kaarten = card_num
+else: 
+    aantal_kaarten = 4
+seed_num = random_seed
 
 def kaart_generator(playlist, seed_num):
-#     df = pd.read_csv(playlist, header = None)
     random.seed(seed_num)
     nums = list(range(1, 51)) 
     random.shuffle(nums)
