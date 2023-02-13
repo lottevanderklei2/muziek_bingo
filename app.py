@@ -52,7 +52,7 @@ def kaart_generator(playlist, seed_num):
         new_df['title_and_artist'][20:25]))
     df2 = pd.DataFrame(data) #, columns=['B', 'I', 'N', 'G', 'O'])
     df2 = df2.append(test, ignore_index=True)
-    df2['N'][2] = "BINGO"
+    df2[2][2] = "BINGO"
     return df2
 
 def bingo_kaarten_generator(playlist, aantal_kaarten, seed_num):
