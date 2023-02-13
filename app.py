@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import random
 from io import StringIO
-from fpdf import FPDF
+# from fpdf import FPDF
 
 uploaded_file = st.file_uploader("Choose a file")
 if uploaded_file is not None:
