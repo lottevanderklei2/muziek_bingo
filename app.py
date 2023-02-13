@@ -43,12 +43,16 @@ def kaart_generator(playlist, seed_num):
     random.shuffle(nums)
     playlist['random'] = nums
     new_df = playlist.sort_values("random")
+    test = pd.DataFrame([' B ', ' I ', ' N ', ' G ', ' O '],
+                       [' ', ' ', ' ', ' ', ' ']).T
     data = list(zip(new_df['title_and_artist'][0:5], 
         new_df['title_and_artist'][5:10],
         new_df['title_and_artist'][10:15],
         new_df['title_and_artist'][15:20],
         new_df['title_and_artist'][20:25]))
     df2 = pd.DataFrame(data, columns=['B', 'I', 'N', 'G', 'O'])
+    df2 = df2.append(test[0][0:5], ignore_index=True)
+    df2 = df2.append(test[1][0:5], ignore_index=True)
     df2['N'][2] = "BINGO"
     return df2
 
