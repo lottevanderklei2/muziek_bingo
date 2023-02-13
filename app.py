@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import random
 from io import StringIO
+from fpdf import FPDF
 
 uploaded_file = st.file_uploader("Choose a file")
 if uploaded_file is not None:
@@ -60,17 +61,28 @@ def bingo_kaarten_generator(playlist, aantal_kaarten, seed_num):
 for i in range(0, aantal_kaarten):
     st.dataframe(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[i])
     
-@st.cache
-def convert_df(df):
-    # IMPORTANT: Cache the conversion to prevent computation on every rerun
-    return df.to_csv().encode('utf-8')
+# @st.cache
+# def convert_df(df):
+#     # IMPORTANT: Cache the conversion to prevent computation on every rerun
+#     return df.to_csv().encode('utf-8')
 
-csv = convert_df(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[0])
+# csv = convert_df(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[0])
 
-st.download_button(
-    label="Download data as CSV",
-    data=csv,
-    file_name='large_df.csv',
-    mime='text/csv',
-)
+# st.download_button(
+#     label="Download data as CSV",
+#     data=csv,
+#     file_name='large_df.csv',
+#     mime='text/csv',
+# )
+
+import streamlit as st
+
+with open("dummy.pdf", "rb") as pdf_file:
+    PDFbyte = pdf_file.read(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[0])
+
+st.download_button(label="Export_Report",
+                    data=PDFbyte,
+                    file_name="test.pdf",
+                    mime='application/octet-stream')
+
 
