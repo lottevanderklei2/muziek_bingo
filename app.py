@@ -59,4 +59,18 @@ def bingo_kaarten_generator(playlist, aantal_kaarten, seed_num):
 
 for i in range(0, aantal_kaarten):
     st.dataframe(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[i])
+    
+@st.cache
+def convert_df(df):
+    # IMPORTANT: Cache the conversion to prevent computation on every rerun
+    return df.to_csv().encode('utf-8')
+
+csv = convert_df(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[0])
+
+st.download_button(
+    label="Download data as CSV",
+    data=csv,
+    file_name='large_df.csv',
+    mime='text/csv',
+)
 
