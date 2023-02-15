@@ -65,8 +65,8 @@ list_df = []
 for i in range(0, aantal_kaarten):
     list_df.append(pd.DataFrame(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[i]) #, header = None, index = False))
 
-for i in range(0, aantal_kaarten):
-    st.dataframe(list_df[i])
+for l in list_df:
+    st.dataframe(list_df)
     
 test = pd.concat(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num))
     
