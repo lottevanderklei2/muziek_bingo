@@ -74,7 +74,9 @@ test = pd.concat(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num))
 @st.cache
 def convert_df(df):
     # IMPORTANT: Cache the conversion to prevent computation on every rerun
-    return df.to_csv().encode('utf-8')
+    return df.to_csv().encode('UTF-16')
+
+
 
 csv = convert_df(test)
 
