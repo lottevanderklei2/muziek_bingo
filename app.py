@@ -52,20 +52,21 @@ def bingo_kaarten_generator(playlist, aantal_kaarten, seed_num):
         kaarten_list.append(kaart_generator(playlist, seed_num + i))
     return kaarten_list
 
-hide_table_row_index = """
-            <style>
-            thead tr th:first-child {display:none}
-            tbody th {display:none}
-            </style>
-            """
+# hide_table_row_index = """
+#             <style>
+#             thead tr th:first-child {display:none}
+#             tbody th {display:none}
+#             </style>
+#             """
 
-# Inject CSS with Markdown
-st.markdown(hide_table_row_index, unsafe_allow_html=True)
-
-
+# # Inject CSS with Markdown
+# st.markdown(hide_table_row_index, unsafe_allow_html=True)
+list_df = []
+for i in range(0, aantal_kaarten):
+    list_df.append(pd.DataFrame(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[i], header = None, index = None))
 
 for i in range(0, aantal_kaarten):
-    st.dataframe(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[i])
+    st.dataframe(list_df[i])
     
 test = pd.concat(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num))
     
