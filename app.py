@@ -63,10 +63,10 @@ def bingo_kaarten_generator(playlist, aantal_kaarten, seed_num):
 # st.markdown(hide_table_row_index, unsafe_allow_html=True)
 list_df = []
 for i in range(0, aantal_kaarten):
-    list_df.append(pd.DataFrame(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[i]) #, header = None, index = False))
+    list_df.append(pd.DataFrame(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[i])) #, header = None, index = False))
 
 for l in list_df:
-    st.dataframe(list_df)
+    st.table(list_df)
     
 test = pd.concat(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num))
     
