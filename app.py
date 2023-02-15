@@ -62,11 +62,10 @@ hide_table_row_index = """
 # Inject CSS with Markdown
 st.markdown(hide_table_row_index, unsafe_allow_html=True)
 
-# # Display a static table
-# st.table(df)
+
 
 for i in range(0, aantal_kaarten):
-    st.table(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[i])
+    st.dataframe(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[i])
     
 test = pd.concat(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num))
     
