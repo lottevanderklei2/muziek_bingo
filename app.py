@@ -55,6 +55,33 @@ def bingo_kaarten_generator(playlist, aantal_kaarten, seed_num):
         kaarten_list.append(kaart_generator(playlist, seed_num + i))
     return kaarten_list
 
+
+def highlight_bingo(ser):
+    highlight = 'background-color:#4A707D'
+    default = ''
+    return [highlight if 'BINGO' in str(e) else default for e in ser] 
+
+df_styled = []
+for i in range(0, aantal_kaarten):
+    df_styled.append(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[i]
+     .style     
+     .hide_index()
+#      .set_caption("BINGO AURAI")
+     .set_properties(**{'background-color': 'white',                                                   
+                                    'color': 'black',                       
+                                    'border-color': 'white',
+                                    'text-align': 'center',
+                                    'text': 'bold', 
+                                    'font-family': 'Arial', 
+                                    'font-weight':'bold'})
+     .apply(highlight_bingo, axis=0, subset=cols)
+     .set_table_styles([dict(selector='th', props=[('text-align', 'center')])]))
+
+
+
+
+
+
 # cols = ['B', 'I','N','G','O']
 # df_styled = []
 # for i in range(0, aantal_kaarten):
@@ -62,7 +89,7 @@ def bingo_kaarten_generator(playlist, aantal_kaarten, seed_num):
     
     
 for i in range(0, aantal_kaarten):
-    st.dataframe(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[i])
+    st.dataframe(df_styled[i])
     
 test = pd.concat(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num))
     
