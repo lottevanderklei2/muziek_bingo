@@ -39,11 +39,14 @@ def kaart_generator(playlist, seed_num):
     new_df['title_and_artist'][10:15],
     new_df['title_and_artist'][15:20],
     new_df['title_and_artist'][20:25]))
+    cols = ['B', 'I','N','G','O']
     test = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
     test2 = pd.DataFrame([' B ', ' I ', ' N ', ' G ', ' O ']).T
     df2 = test2.append(data, ignore_index=True)
     df2 = df2.append(test, ignore_index=True)
-    df2[2][2] = "BINGO"
+    df2.columns = cols
+    df2['N'][2] = "BINGO"
+#     df2[2][2] = "BINGO"
     return df2
 
 def bingo_kaarten_generator(playlist, aantal_kaarten, seed_num):
@@ -52,21 +55,11 @@ def bingo_kaarten_generator(playlist, aantal_kaarten, seed_num):
         kaarten_list.append(kaart_generator(playlist, seed_num + i))
     return kaarten_list
 
-# hide_table_row_index = """
-#             <style>
-#             thead tr th:first-child {display:none}
-#             tbody th {display:none}
-#             </style>
-#             """
-
-# # Inject CSS with Markdown
-# st.markdown(hide_table_row_index, unsafe_allow_html=True)
-# list_df = []
+# cols = ['B', 'I','N','G','O']
+# df_styled = []
 # for i in range(0, aantal_kaarten):
-#     list_df.append(pd.DataFrame(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[i])) #, header = None, index = False))
-
-# for l in list_df:
-#     st.dataframe(list_df)
+#     df_styled.append(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[i].columns = cols)
+    
     
 for i in range(0, aantal_kaarten):
     st.dataframe(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[i])
