@@ -42,7 +42,7 @@ def kaart_generator(playlist, seed_num):
     cols = ['B', 'I','N','G','O']
 #     test = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
 #     test2 = pd.DataFrame([' B ', ' I ', ' N ', ' G ', ' O ']).T
-#     df2 = test2.append(data, ignore_index=True)
+    df2 = pd.DataFrame(data) #, ignore_index=True)
 #     df2 = df2.append(test, ignore_index=True)
     df2.columns = cols
     df2['N'][2] = "BINGO"
