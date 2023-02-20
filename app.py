@@ -74,7 +74,7 @@ for i in range(0, aantal_kaarten):
                                     'text': 'bold', 
                                     'font-family': 'Arial', 
                                     'font-weight':'bold'})
-     .apply(highlight_bingo, axis=0, subset=cols)
+#      .apply(highlight_bingo, axis=0, subset=cols)
      .set_table_styles([dict(selector='th', props=[('text-align', 'center')])]))
 
 
