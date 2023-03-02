@@ -43,7 +43,7 @@ def kaart_generator(playlist, seed_num):
     test = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
 #     test2 = pd.DataFrame([' B ', ' I ', ' N ', ' G ', ' O ']).T
     df2 = pd.DataFrame(data) #, ignore_index=True)
-#     df2 = df2.append(test, ignore_index=True)
+    df2 = df2.append(test, ignore_index=True)
     df2.columns = cols
     df2['N'][2] = "BINGO"
 #     df2[2][2] = "BINGO"
@@ -103,7 +103,7 @@ csv = convert_df(test)
 st.download_button(
     label="Download data as CSV",
     data=csv,
-    file_name='large_df.csv',
+    file_name='bingo_kaarten.csv',
     mime='text/csv',
 )
 
