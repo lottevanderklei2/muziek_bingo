@@ -89,7 +89,8 @@ for i in range(0, aantal_kaarten):
     
     
 for i in range(0, aantal_kaarten):
-    st.dataframe(df_styled[i])
+    st.dataframe(df_styled[i].iloc[:-1,:] )
+
     
 test = pd.concat(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num))
     
