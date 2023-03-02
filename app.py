@@ -8,7 +8,7 @@ if uploaded_file is not None:
     bytes_data = uploaded_file.getvalue()
     stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
     string_data = stringio.read()
-    dataframe = pd.read_csv(uploaded_file)
+    dataframe = pd.read_csv(uploaded_file, sep = ';')
     st.write(dataframe)
 else: 
     st.text('No file uploaded')
