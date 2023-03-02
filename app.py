@@ -40,7 +40,7 @@ def kaart_generator(playlist, seed_num):
     new_df['title_and_artist'][15:20],
     new_df['title_and_artist'][20:25]))
     cols = ['B', 'I','N','G','O']
-#     test = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
+    test = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
 #     test2 = pd.DataFrame([' B ', ' I ', ' N ', ' G ', ' O ']).T
     df2 = pd.DataFrame(data) #, ignore_index=True)
 #     df2 = df2.append(test, ignore_index=True)
