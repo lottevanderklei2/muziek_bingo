@@ -16,11 +16,11 @@ else:
 playlist = pd.DataFrame(dataframe) 
 
 random_seed = st.number_input('Insert your favorite number', step=1)
-st.write('The current number is ', random_seed)
+st.write('Your favorite number is ', random_seed)
 seed_num = random_seed
 
-card_num = st.number_input('Insert number of cards', step = 1 )
-st.write('The current number is ', card_num)
+card_num = st.number_input('Insert number of cards you want', step = 1 )
+st.write('The number of cars is ', card_num)
   
 if card_num is not None:
     aantal_kaarten = card_num
@@ -40,12 +40,12 @@ def kaart_generator(playlist, seed_num):
     new_df['title_and_artist'][15:20],
     new_df['title_and_artist'][20:25]))
     cols = ['B', 'I','N','G','O']
-    test = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
-    test2 = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
+#     test = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
+#     test2 = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
 #     test2 = pd.DataFrame([' B ', ' I ', ' N ', ' G ', ' O ']).T
     df2 = pd.DataFrame(data) #, ignore_index=True)
-    df2 = df2.append(test, ignore_index=True)
-    df2 = df2.append(test2, ignore_index=True)
+#     df2 = df2.append(test, ignore_index=True)
+#     df2 = df2.append(test2, ignore_index=True)
     df2.columns = cols
     df2['N'][2] = "BINGO"
 #     df2[2][2] = "BINGO"
@@ -79,10 +79,33 @@ for i in range(0, aantal_kaarten):
 #      .apply(highlight_bingo, axis=0, subset=cols)
      .set_table_styles([dict(selector='th', props=[('text-align', 'center')])]))
 
+for i in range(0, aantal_kaarten):
+    st.dataframe(df_styled[i])
 
 
 
-
+def kaart_generator2(playlist, seed_num):
+    random.seed(seed_num)
+    nums = list(range(1, 51)) 
+    random.shuffle(nums)
+    playlist['random'] = nums
+    new_df = playlist.sort_values("random")
+    data = list(zip(new_df['title_and_artist'][0:5], 
+    new_df['title_and_artist'][5:10],
+    new_df['title_and_artist'][10:15],
+    new_df['title_and_artist'][15:20],
+    new_df['title_and_artist'][20:25]))
+    cols = ['B', 'I','N','G','O']
+    test = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
+    test2 = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
+#     test2 = pd.DataFrame([' B ', ' I ', ' N ', ' G ', ' O ']).T
+    df2 = pd.DataFrame(data) #, ignore_index=True)
+    df2 = df2.append(test, ignore_index=True)
+    df2 = df2.append(test2, ignore_index=True)
+    df2.columns = cols
+    df2['N'][2] = "BINGO"
+#     df2[2][2] = "BINGO"
+    return df2
 
 # cols = ['B', 'I','N','G','O']
 # df_styled = []
@@ -90,11 +113,10 @@ for i in range(0, aantal_kaarten):
 #     df_styled.append(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[i].columns = cols)
     
     
-for i in range(0, aantal_kaarten):
-    st.dataframe(df_styled[i])
+
 
     
-test = pd.concat(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num))
+test = pd.concat(bingo_kaarten_generator2(playlist, aantal_kaarten, seed_num))
     
 @st.cache
 def convert_df(df):
