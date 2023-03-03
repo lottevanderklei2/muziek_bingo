@@ -112,7 +112,11 @@ def kaart_generator2(playlist, seed_num):
 # for i in range(0, aantal_kaarten):
 #     df_styled.append(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[i].columns = cols)
     
-    
+def bingo_kaarten_generator2(playlist, aantal_kaarten, seed_num):
+    kaarten_list = []
+    for i in range(0, aantal_kaarten):
+        kaarten_list.append(kaart_generator2(playlist, seed_num + i))
+    return kaarten_list    
 
 
     
