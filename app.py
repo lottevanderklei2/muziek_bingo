@@ -1,13 +1,10 @@
 import streamlit as st
 import pandas as pd
 import random
-from io import StringIO
+# from io import StringIO
 
 uploaded_file = st.file_uploader("Choose a file")
 if uploaded_file is not None:
-#     bytes_data = uploaded_file.getvalue()
-#     stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
-#     string_data = stringio.read()
     dataframe = pd.read_csv(uploaded_file, sep = ';')
     st.write(dataframe)
 else: 
@@ -27,7 +24,6 @@ if card_num is not None:
 else: 
     aantal_kaarten = 4
 
-
 def kaart_generator(playlist, seed_num):
     random.seed(seed_num)
     nums = list(range(1, 51)) 
@@ -40,15 +36,9 @@ def kaart_generator(playlist, seed_num):
     new_df['title_and_artist'][15:20],
     new_df['title_and_artist'][20:25]))
     cols = ['B', 'I','N','G','O']
-#     test = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
-#     test2 = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
-#     test2 = pd.DataFrame([' B ', ' I ', ' N ', ' G ', ' O ']).T
     df2 = pd.DataFrame(data) #, ignore_index=True)
-#     df2 = df2.append(test, ignore_index=True)
-#     df2 = df2.append(test2, ignore_index=True)
     df2.columns = cols
     df2['N'][2] = "BINGO"
-#     df2[2][2] = "BINGO"
     return df2
 
 def bingo_kaarten_generator(playlist, aantal_kaarten, seed_num):
@@ -98,19 +88,12 @@ def kaart_generator2(playlist, seed_num):
     cols = ['B', 'I','N','G','O']
     test = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
     test2 = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
-#     test2 = pd.DataFrame([' B ', ' I ', ' N ', ' G ', ' O ']).T
     df2 = pd.DataFrame(data) #, ignore_index=True)
     df2 = df2.append(test, ignore_index=True)
     df2 = df2.append(test2, ignore_index=True)
     df2.columns = cols
     df2['N'][2] = "BINGO"
-#     df2[2][2] = "BINGO"
     return df2
-
-# cols = ['B', 'I','N','G','O']
-# df_styled = []
-# for i in range(0, aantal_kaarten):
-#     df_styled.append(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[i].columns = cols)
     
 def bingo_kaarten_generator2(playlist, aantal_kaarten, seed_num):
     kaarten_list = []
