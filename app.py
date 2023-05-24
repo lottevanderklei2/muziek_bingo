@@ -2,8 +2,8 @@ import streamlit as st
 import pandas as pd
 import random
 from openpyxl import reader,load_workbook,Workbook
-# from pdfdocument import PDFDocument
-from fpdf import FPDF
+from pdfdocument import PDFDocument
+# from fpdf import FPDF
 
 uploaded_file = st.file_uploader("Upload je afspeellijst in excel formaat")
 
@@ -68,68 +68,22 @@ df = kaart_generator2(playlist, seed_num)
 # Display the pretty DataFrame in Streamlit
 st.dataframe(df.style.set_properties(**{'text-align': 'center'}))
 
-# # Create a function to download DataFrame as PDF
-# def download_as_pdf(df):
-#     # Create a new PDF document
-#     pdf_doc = PDFDocument()
-
-#     # Create a page and add the DataFrame as a table
-#     page = pdf_doc.add_page()
-#     table = page.add_table(df.values.tolist(), header=df.columns.tolist())
-
-#     # Set table style
-#     table.style = "Table Grid"
-
-#     # Generate the PDF file as binary data
-#     pdf_bytes = pdf_doc.render()
-
-#     return pdf_bytes
-
-# # Create a download button
-# if st.button('Download as PDF'):
-#     with st.spinner('Generating PDF...'):
-#         pdf_file = download_as_pdf(df)
-#         st.success('Download Completed!')
-#         st.download_button(
-#             label='Click to Download',
-#             data=pdf_file,
-#             file_name='dataframe.pdf',
-#             mime='application/pdf'
-#         )
-        
-# Display the pretty DataFrame in Streamlit
-st.dataframe(df.style.set_properties(**{'text-align': 'center'}))
-
-# Create a PDF class inheriting from FPDF
-class PDF(FPDF):
-    def header(self):
-        # Add header text
-        self.set_font('Arial', 'B', 12)
-        self.cell(0, 10, 'My DataFrame PDF', ln=True, align='C')
-
-    def footer(self):
-        # Add page number
-        self.set_y(-15)
-        self.set_font('Arial', 'I', 8)
-        self.cell(0, 10, f'Page {self.page_no()}', 0, 0, 'C')
-
 # Create a function to download DataFrame as PDF
 def download_as_pdf(df):
-    pdf = PDF()
-    pdf.add_page()
+    # Create a new PDF document
+    pdf_doc = PDFDocument()
 
-    # Add DataFrame as a table
-    pdf.set_font('Arial', '', 12)
-    for index, row in df.iterrows():
-        pdf.cell(30, 10, str(row['Column 1']), border=1)
-        pdf.cell(30, 10, str(row['Column 2']), border=1)
-        pdf.cell(30, 10, str(row['Column 3']), border=1)
-        pdf.cell(30, 10, str(row['Column 4']), border=1)
-        pdf.cell(30, 10, str(row['Column 5']), border=1)
-        pdf.ln()
+    # Create a page and add the DataFrame as a table
+    page = pdf_doc.add_page()
+    table = page.add_table(df.values.tolist(), header=df.columns.tolist())
+
+    # Set table style
+    table.style = "Table Grid"
 
     # Generate the PDF file as binary data
-    return pdf.output(dest='S').encode('latin-1')
+    pdf_bytes = pdf_doc.render()
+
+    return pdf_bytes
 
 # Create a download button
 if st.button('Download as PDF'):
@@ -141,7 +95,53 @@ if st.button('Download as PDF'):
             data=pdf_file,
             file_name='dataframe.pdf',
             mime='application/pdf'
-        )        
+        )
+        
+# # Display the pretty DataFrame in Streamlit
+# st.dataframe(df.style.set_properties(**{'text-align': 'center'}))
+
+# # Create a PDF class inheriting from FPDF
+# class PDF(FPDF):
+#     def header(self):
+#         # Add header text
+#         self.set_font('Arial', 'B', 12)
+#         self.cell(0, 10, 'My DataFrame PDF', ln=True, align='C')
+
+#     def footer(self):
+#         # Add page number
+#         self.set_y(-15)
+#         self.set_font('Arial', 'I', 8)
+#         self.cell(0, 10, f'Page {self.page_no()}', 0, 0, 'C')
+
+# # Create a function to download DataFrame as PDF
+# def download_as_pdf(df):
+#     pdf = PDF()
+#     pdf.add_page()
+
+#     # Add DataFrame as a table
+#     pdf.set_font('Arial', '', 12)
+#     for index, row in df.iterrows():
+#         pdf.cell(30, 10, str(row['Column 1']), border=1)
+#         pdf.cell(30, 10, str(row['Column 2']), border=1)
+#         pdf.cell(30, 10, str(row['Column 3']), border=1)
+#         pdf.cell(30, 10, str(row['Column 4']), border=1)
+#         pdf.cell(30, 10, str(row['Column 5']), border=1)
+#         pdf.ln()
+
+#     # Generate the PDF file as binary data
+#     return pdf.output(dest='S').encode('latin-1')
+
+# # Create a download button
+# if st.button('Download as PDF'):
+#     with st.spinner('Generating PDF...'):
+#         pdf_file = download_as_pdf(df)
+#         st.success('Download Completed!')
+#         st.download_button(
+#             label='Click to Download',
+#             data=pdf_file,
+#             file_name='dataframe.pdf',
+#             mime='application/pdf'
+#         )        
 # def kaart_generator(playlist, seed_num):
 #     random.seed(seed_num)
 #     nums = list(range(1, 51)) 
