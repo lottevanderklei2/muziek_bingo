@@ -41,7 +41,8 @@ def kaart_generator2(playlist, seed_num):
 #     df2 = df2.concat(test2, ignore_index=True)
     df2.columns = cols
     df2['N'][2] = "BINGO"
-    return df2
+    table = df2.to_records(index=False)
+    return table
 
 # df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
 
@@ -59,7 +60,7 @@ def kaart_generator2(playlist, seed_num):
 #         kaarten_list.append(kaart_generator2(playlist, seed_num + i))
 #     return kaarten_list       
     
-st.write(kaart_generator2(playlist, seed_num))
+st.table(kaart_generator2(playlist, seed_num))
     
 # def kaart_generator(playlist, seed_num):
 #     random.seed(seed_num)
