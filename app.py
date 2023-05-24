@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import random
 from openpyxl import reader,load_workbook,Workbook
+import weasyprint
 
 uploaded_file = st.file_uploader("Upload je afspeellijst in excel formaat")
 
@@ -61,6 +62,26 @@ def kaart_generator2(playlist, seed_num):
 #     return kaarten_list       
     
 st.table(kaart_generator2(playlist, seed_num))
+
+df = kaart_generator2(playlist, seed_num)
+st.dataframe(df.style.set_properties(**{'text-align': 'center'}))
+
+# Create a function to download DataFrame as PDF
+def download_as_pdf(df):
+    pdf = weasyprint.HTML(string=df.to_html()).write_pdf()
+    return pdf
+
+# Create a download button
+if st.button('Download as PDF'):
+    with st.spinner('Generating PDF...'):
+        pdf_file = download_as_pdf(df)
+        st.success('Download Completed!')
+        st.download_button(
+            label='Click to Download',
+            data=pdf_file,
+            file_name='dataframe.pdf',
+            mime='application/pdf'
+        )
     
 # def kaart_generator(playlist, seed_num):
 #     random.seed(seed_num)
