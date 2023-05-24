@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import random
 from openpyxl import reader,load_workbook,Workbook
-from pyppeteer import launch
+from pdfdocument import PDFDocument
 
 uploaded_file = st.file_uploader("Upload je afspeellijst in excel formaat")
 
@@ -68,19 +68,26 @@ df = kaart_generator2(playlist, seed_num)
 st.dataframe(df.style.set_properties(**{'text-align': 'center'}))
 
 # Create a function to download DataFrame as PDF
-async def download_as_pdf(df):
-    browser = await launch()
-    page = await browser.newPage()
-    html = df.to_html()
-    await page.setContent(html)
-    pdf = await page.pdf()
-    await browser.close()
-    return pdf
+def download_as_pdf(df):
+    # Create a new PDF document
+    pdf_doc = PDFDocument()
+
+    # Create a page and add the DataFrame as a table
+    page = pdf_doc.add_page()
+    table = page.add_table(df.values.tolist(), header=df.columns.tolist())
+
+    # Set table style
+    table.style = "Table Grid"
+
+    # Generate the PDF file as binary data
+    pdf_bytes = pdf_doc.render()
+
+    return pdf_bytes
 
 # Create a download button
 if st.button('Download as PDF'):
     with st.spinner('Generating PDF...'):
-        pdf_file = await download_as_pdf(df)
+        pdf_file = download_as_pdf(df)
         st.success('Download Completed!')
         st.download_button(
             label='Click to Download',
@@ -88,7 +95,8 @@ if st.button('Download as PDF'):
             file_name='dataframe.pdf',
             mime='application/pdf'
         )
-    
+        
+        
 # def kaart_generator(playlist, seed_num):
 #     random.seed(seed_num)
 #     nums = list(range(1, 51)) 
