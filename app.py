@@ -20,13 +20,7 @@ random_seed = st.number_input('Vul hier je favoriete nummer in', step=1)
 st.write('Jouw favoriete nummer is: ', random_seed)
 seed_num = random_seed
 
-# card_num = st.number_input('Vul hier in hoeveel bingokaartenje wil genereren', step = 1 )
-# st.write('Aantal bingokaarten ', card_num)
-  
-# if card_num is not None:
-#     aantal_kaarten = card_num
-# else: 
-#     aantal_kaarten = 4
+
 
 def kaart_generator2(playlist, seed_num):
     random.seed(seed_num)
@@ -43,17 +37,27 @@ def kaart_generator2(playlist, seed_num):
     test = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
     test2 = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
     df2 = pd.DataFrame(data) #, ignore_index=True)
-    df2 = df2.append(test, ignore_index=True)
-    df2 = df2.append(test2, ignore_index=True)
+    df2 = df2.concat(test, ignore_index=True)
+    df2 = df2.concat(test2, ignore_index=True)
     df2.columns = cols
     df2['N'][2] = "BINGO"
     return df2
+
+# df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
+
+# card_num = st.number_input('Vul hier in hoeveel bingokaartenje wil genereren', step = 1 )
+# st.write('Aantal bingokaarten ', card_num)
+  
+# if card_num is not None:
+#     aantal_kaarten = card_num
+# else: 
+#     aantal_kaarten = 4
     
-def bingo_kaarten_generator2(playlist, aantal_kaarten, seed_num):
-    kaarten_list = []
-    for i in range(0, aantal_kaarten):
-        kaarten_list.append(kaart_generator2(playlist, seed_num + i))
-    return kaarten_list       
+# def bingo_kaarten_generator2(playlist, aantal_kaarten, seed_num):
+#     kaarten_list = []
+#     for i in range(0, aantal_kaarten):
+#         kaarten_list.append(kaart_generator2(playlist, seed_num + i))
+#     return kaarten_list       
     
 st.write(kaart_generator2(playlist, seed_num))
     
