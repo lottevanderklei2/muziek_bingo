@@ -3,12 +3,26 @@ import pandas as pd
 import random
 # from io import StringIO
 
+import pandas as pd
+import streamlit as st
+
 uploaded_file = st.file_uploader("Choose a file")
+
 if uploaded_file is not None:
-    dataframe = pd.read_csv(uploaded_file, sep = ';')
-    st.write(dataframe)
-else: 
+    try:
+        dataframe = pd.read_excel(uploaded_file)
+        st.write(dataframe)
+    except Exception as e:
+        st.error(f"Error: {str(e)}")
+else:
     st.text('No file uploaded')
+
+# uploaded_file = st.file_uploader("Choose a file")
+# if uploaded_file is not None:
+#     dataframe = pd.read_csv(uploaded_file, sep = ';')
+#     st.write(dataframe)
+# else: 
+#     st.text('No file uploaded')
 
 playlist = pd.DataFrame(dataframe) 
 
