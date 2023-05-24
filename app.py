@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import random
-pip install openpyxl
+import openpyxl
 # from io import StringIO
 
 import pandas as pd
