@@ -37,14 +37,12 @@ def kaart_generator2(playlist, seed_num):
     new_df['title_and_artist'][20:25]))
     cols = ['B', 'I','N','G','O']
     test = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
-    test2 = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
     df2 = pd.DataFrame(data) #, ignore_index=True)
     df2 = df2.concat(test, ignore_index=True, axis = 1)
-    df2 = df2.concat(test2, ignore_index=True, axis = 1)
     df2.columns = cols
     df2['N'][2] = "BINGO"
-    table = df2.to_records(index=False)
-    return table
+#     table = df2.to_records(index=False)
+    return df2
 
 # df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
 
