@@ -35,7 +35,7 @@ def kaart_generator2(playlist, seed_num):
                     new_df['title_and_artist'][20:25]))
     cols = ['B', 'I', 'N', 'G', 'O']
     
-    empty_row = pd.DataFrame([[''] * len(cols)], columns=cols)
+    empty_row = pd.DataFrame([[''] * len(data[0])], columns=cols)
     
     df2 = pd.DataFrame(data)
     df2 = pd.concat([df2, empty_row], ignore_index=True)
