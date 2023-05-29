@@ -1,2 +1,1 @@
 openpyxl
-# pdfdocument==4.0.0
