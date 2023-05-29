@@ -1,2 +1,2 @@
 openpyxl
-fpdf==1.7.2
+pdfdocument
