@@ -38,12 +38,16 @@ def kaart_generator2(playlist, seed_num):
     empty_row = pd.DataFrame([''] * len(cols)).T
     empty_row.columns = cols
     
+    empty_row2 = pd.DataFrame([''] * len(cols)).T
+    empty_row2.columns = cols
+    
     df2 = pd.DataFrame(data)
     df2.columns = cols
     df2 = pd.concat([df2, empty_row], ignore_index=True)
-    df2['N'][2] = "BINGO"
+    df3 = pd.concat([df2, empty_row2], ignore_index=True)
+    df3['N'][2] = "BINGO"
     
-    return df2
+    return df3
 
 card_num = st.number_input('Vul hier in hoeveel bingokaartenje wil genereren', step = 1 )
 st.write('Aantal bingokaarten ', card_num)
