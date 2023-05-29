@@ -59,7 +59,7 @@ def bingo_kaarten_generator2(playlist, aantal_kaarten, seed_num):
         kaarten_list.append(kaart_generator2(playlist, seed_num + i))
     return kaarten_list     
 
-test = pd.concat(bingo_kaarten_generator2(playlist, aantal_kaarten, seed_num))
+test = pd.concat(bingo_kaarten_generator2(playlist, card_num, seed_num))
     
 @st.cache
 def convert_df(df):
