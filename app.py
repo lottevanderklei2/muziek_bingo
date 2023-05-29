@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import random
 from openpyxl import reader,load_workbook,Workbook
+pip install pdfdocument
 from pdfdocument import PDFDocument
 # from fpdf import FPDF
 
