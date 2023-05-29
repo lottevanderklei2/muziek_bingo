@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import random
 from openpyxl import reader,load_workbook,Workbook
-from pdfdocument import PDFDocument
+# from pdfdocument import PDFDocument
 # from fpdf import FPDF
 
 uploaded_file = st.file_uploader("Upload je afspeellijst in excel formaat")
