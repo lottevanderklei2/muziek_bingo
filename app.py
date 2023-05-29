@@ -22,8 +22,6 @@ random_seed = st.number_input('Vul hier je favoriete nummer in', step=1)
 st.write('Jouw favoriete nummer is: ', random_seed)
 seed_num = random_seed
 
-
-
 def kaart_generator2(playlist, seed_num):
     random.seed(seed_num)
     nums = list(range(1, 51)) 
@@ -31,18 +29,40 @@ def kaart_generator2(playlist, seed_num):
     playlist['random'] = nums
     new_df = playlist.sort_values("random")
     data = list(zip(new_df['title_and_artist'][0:5], 
-    new_df['title_and_artist'][5:10],
-    new_df['title_and_artist'][10:15],
-    new_df['title_and_artist'][15:20],
-    new_df['title_and_artist'][20:25]))
-    cols = ['B', 'I','N','G','O']
-    test = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
-    df2 = pd.DataFrame(data) #, ignore_index=True)
-    df2 = df2.concat(test, ignore_index=True, axis = 1)
+                    new_df['title_and_artist'][5:10],
+                    new_df['title_and_artist'][10:15],
+                    new_df['title_and_artist'][15:20],
+                    new_df['title_and_artist'][20:25]))
+    cols = ['B', 'I', 'N', 'G', 'O']
+    
+    empty_row = pd.DataFrame([[''] * len(cols)], columns=cols)
+    
+    df2 = pd.DataFrame(data)
+    df2 = pd.concat([df2, empty_row], ignore_index=True)
     df2.columns = cols
     df2['N'][2] = "BINGO"
-#     table = df2.to_records(index=False)
+    
     return df2
+
+# def kaart_generator2(playlist, seed_num):
+#     random.seed(seed_num)
+#     nums = list(range(1, 51)) 
+#     random.shuffle(nums)
+#     playlist['random'] = nums
+#     new_df = playlist.sort_values("random")
+#     data = list(zip(new_df['title_and_artist'][0:5], 
+#     new_df['title_and_artist'][5:10],
+#     new_df['title_and_artist'][10:15],
+#     new_df['title_and_artist'][15:20],
+#     new_df['title_and_artist'][20:25]))
+#     cols = ['B', 'I','N','G','O']
+#     test = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
+#     df2 = pd.DataFrame(data) #, ignore_index=True)
+#     df2 = df2.concat(test, ignore_index=True, axis = 1)
+#     df2.columns = cols
+#     df2['N'][2] = "BINGO"
+# #     table = df2.to_records(index=False)
+#     return df2
 
 # df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
 
