@@ -45,6 +45,46 @@ def kaart_generator2(playlist, seed_num):
     
     return df2
 
+card_num = st.number_input('Vul hier in hoeveel bingokaartenje wil genereren', step = 1 )
+st.write('Aantal bingokaarten ', card_num)
+  
+# if card_num is not None:
+#     aantal_kaarten = card_num
+# else: 
+#     aantal_kaarten = 4
+    
+def bingo_kaarten_generator2(playlist, aantal_kaarten, seed_num):
+    kaarten_list = []
+    for i in range(0, aantal_kaarten):
+        kaarten_list.append(kaart_generator2(playlist, seed_num + i))
+    return kaarten_list     
+
+test = pd.concat(bingo_kaarten_generator2(playlist, aantal_kaarten, seed_num))
+    
+@st.cache
+def convert_df(df):
+    # IMPORTANT: Cache the conversion to prevent computation on every rerun
+    return df.to_csv(index=False, header=False, sep=';').encode('UTF-16')
+
+csv = convert_df(test)
+
+st.download_button(
+    label="Download data as CSV",
+    data=csv,
+    file_name='bingo_kaarten.csv',
+    mime='text/csv',
+)
+
+# def bingo_kaarten_generator(playlist, aantal_kaarten, seed_num):
+#     kaarten_list = []
+#     for i in range(0, aantal_kaarten):
+#         kaarten_list.append(kaart_generator(playlist, seed_num + i))
+#     return kaarten_list
+
+
+
+
+
 # def kaart_generator2(playlist, seed_num):
 #     random.seed(seed_num)
 #     nums = list(range(1, 51)) 
