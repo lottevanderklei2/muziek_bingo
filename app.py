@@ -1,12 +1,28 @@
 import streamlit as st
 import pandas as pd
 import random
-from openpyxl import reader,load_workbook,Workbook
-# from pdfdocument import PDFDocument
-# from fpdf import FPDF
+from openpyxl import load_workbook
+from fpdf import FPDF
+from io import BytesIO
 
+# Set up the page title and layout
+st.set_page_config(page_title="Muziek Bingo", layout="centered")
+
+# Function to set the style
+def set_style():
+    with open('./assets/styles.css') as f:
+        css = f.read()
+    st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
+
+# Set the style
+set_style()
+
+# Title of the app
+st.markdown('<div class="title">Muziek Bingo</div>', unsafe_allow_html=True)
+
+# File uploader box
+st.markdown('<div class="box">', unsafe_allow_html=True)
 uploaded_file = st.file_uploader("Upload je afspeellijst in excel formaat")
-
 if uploaded_file is not None:
     try:
         dataframe = pd.read_excel(uploaded_file)
@@ -15,290 +31,123 @@ if uploaded_file is not None:
         st.error(f"Error: {str(e)}")
 else:
     st.text('Je hebt nog geen bestand geüpload')
+st.markdown('</div>', unsafe_allow_html=True)
 
-playlist = pd.DataFrame(dataframe) 
+if uploaded_file is not None:
+    playlist = pd.DataFrame(dataframe)
 
-random_seed = st.number_input('Vul hier je favoriete nummer in', step=1)
-st.write('Jouw favoriete nummer is: ', random_seed)
-seed_num = random_seed
+    # Random seed input box
+    st.markdown('<div class="box">', unsafe_allow_html=True)
+    random_seed = st.number_input('Vul hier je favoriete nummer in', step=1)
+    st.write('Jouw favoriete nummer is: ', random_seed)
+    seed_num = random_seed
+    st.markdown('</div>', unsafe_allow_html=True)
 
-def kaart_generator2(playlist, seed_num):
-    random.seed(seed_num)
-    nums = list(range(1, 51)) 
-    random.shuffle(nums)
-    playlist['random'] = nums
-    new_df = playlist.sort_values("random")
-    data = list(zip(new_df['title_and_artist'][0:5], 
-                    new_df['title_and_artist'][5:10],
-                    new_df['title_and_artist'][10:15],
-                    new_df['title_and_artist'][15:20],
-                    new_df['title_and_artist'][20:25]))
-    cols = ['B', 'I', 'N', 'G', 'O']
-    
-    empty_row = pd.DataFrame([''] * len(cols)).T
-    empty_row.columns = cols
-    
-    empty_row2 = pd.DataFrame([''] * len(cols)).T
-    empty_row2.columns = cols
-    
-    df2 = pd.DataFrame(data)
-    df2.columns = cols
-    df2 = pd.concat([df2, empty_row], ignore_index=True)
-    df3 = pd.concat([df2, empty_row2], ignore_index=True)
-    df3['N'][2] = "BINGO"
-    
-    return df3
+    # Function to generate bingo cards
+    def kaart_generator2(playlist, seed_num):
+        random.seed(seed_num)
+        nums = list(range(1, 51))
+        random.shuffle(nums)
+        playlist['random'] = nums
+        new_df = playlist.sort_values("random")
+        data = list(zip(new_df.iloc[0:5]['title_and_artist'],
+                        new_df.iloc[5:10]['title_and_artist'],
+                        new_df.iloc[10:15]['title_and_artist'],
+                        new_df.iloc[15:20]['title_and_artist'],
+                        new_df.iloc[20:25]['title_and_artist']))
+        cols = ['B', 'I', 'N', 'G', 'O']
 
-card_num = st.number_input('Vul hier in hoeveel bingokaartenje wil genereren', step = 1 )
-st.write('Aantal bingokaarten ', card_num)
-  
-# if card_num is not None:
-#     aantal_kaarten = card_num
-# else: 
-#     aantal_kaarten = 4
-    
-def bingo_kaarten_generator2(playlist, aantal_kaarten, seed_num):
-    kaarten_list = []
-    for i in range(0, aantal_kaarten):
-        kaarten_list.append(kaart_generator2(playlist, seed_num + i))
-    return kaarten_list     
+        df2 = pd.DataFrame(data, columns=cols)
+        df2.at[2, 'N'] = "BINGO"
 
-test = pd.concat(bingo_kaarten_generator2(playlist, card_num, seed_num))
-    
-@st.cache
-def convert_df(df):
-    # IMPORTANT: Cache the conversion to prevent computation on every rerun
-    return df.to_csv(index=False, header=False, sep=';').encode('UTF-16')
+        return df2
 
-csv = convert_df(test)
+    # Card number input box
+    st.markdown('<div class="box">', unsafe_allow_html=True)
+    card_num = st.number_input('Vul hier in hoeveel bingokaarten je wil genereren', step=1)
+    st.write('Aantal bingokaarten ', card_num)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-st.download_button(
-    label="Download data as CSV",
-    data=csv,
-    file_name='bingo_kaarten.csv',
-    mime='text/csv',
-)
+    def bingo_kaarten_generator2(playlist, aantal_kaarten, seed_num):
+        kaarten_list = []
+        for i in range(aantal_kaarten):
+            kaarten_list.append(kaart_generator2(playlist, seed_num + i))
+        return kaarten_list
 
-# def bingo_kaarten_generator(playlist, aantal_kaarten, seed_num):
-#     kaarten_list = []
-#     for i in range(0, aantal_kaarten):
-#         kaarten_list.append(kaart_generator(playlist, seed_num + i))
-#     return kaarten_list
+    if card_num > 0:
+        kaarten_list = bingo_kaarten_generator2(playlist, card_num, seed_num)
 
+        @st.cache_data
+        def convert_df(df):
+            return df.to_csv(index=False, header=False, sep=';').encode('UTF-16')
 
+        combined_df = pd.concat(kaarten_list, keys=range(1, card_num + 1), names=['Card', 'Row'])
+        csv = convert_df(combined_df)
 
-
-
-# def kaart_generator2(playlist, seed_num):
-#     random.seed(seed_num)
-#     nums = list(range(1, 51)) 
-#     random.shuffle(nums)
-#     playlist['random'] = nums
-#     new_df = playlist.sort_values("random")
-#     data = list(zip(new_df['title_and_artist'][0:5], 
-#     new_df['title_and_artist'][5:10],
-#     new_df['title_and_artist'][10:15],
-#     new_df['title_and_artist'][15:20],
-#     new_df['title_and_artist'][20:25]))
-#     cols = ['B', 'I','N','G','O']
-#     test = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
-#     df2 = pd.DataFrame(data) #, ignore_index=True)
-#     df2 = df2.concat(test, ignore_index=True, axis = 1)
-#     df2.columns = cols
-#     df2['N'][2] = "BINGO"
-# #     table = df2.to_records(index=False)
-#     return df2
-
-# df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
-
-# card_num = st.number_input('Vul hier in hoeveel bingokaartenje wil genereren', step = 1 )
-# st.write('Aantal bingokaarten ', card_num)
-  
-# if card_num is not None:
-#     aantal_kaarten = card_num
-# else: 
-#     aantal_kaarten = 4
-    
-# def bingo_kaarten_generator2(playlist, aantal_kaarten, seed_num):
-#     kaarten_list = []
-#     for i in range(0, aantal_kaarten):
-#         kaarten_list.append(kaart_generator2(playlist, seed_num + i))
-#     return kaarten_list       
-    
-st.table(kaart_generator2(playlist, seed_num))
-
-df = kaart_generator2(playlist, seed_num)
-# Display the pretty DataFrame in Streamlit
-# st.dataframe(df.style.set_properties(**{'text-align': 'center'}))
-
-# # Create a function to download DataFrame as PDF
-# def download_as_pdf(df):
-#     # Create a new PDF document
-#     pdf_doc = PDFDocument()
-
-#     # Create a page and add the DataFrame as a table
-#     page = pdf_doc.add_page()
-#     table = page.add_table(df.values.tolist(), header=df.columns.tolist())
-
-#     # Set table style
-#     table.style = "Table Grid"
-
-#     # Generate the PDF file as binary data
-#     pdf_bytes = pdf_doc.render()
-
-#     return pdf_bytes
-
-# # Create a download button
-# if st.button('Download as PDF'):
-#     with st.spinner('Generating PDF...'):
-#         pdf_file = download_as_pdf(df)
-#         st.success('Download Completed!')
-#         st.download_button(
-#             label='Click to Download',
-#             data=pdf_file,
-#             file_name='dataframe.pdf',
-#             mime='application/pdf'
-#         )
-        
-# Display the pretty DataFrame in Streamlit
-st.dataframe(df.style.set_properties(**{'text-align': 'center'}))
-
-# Create a PDF class inheriting from FPDF
-class PDF(FPDF):
-    def header(self):
-        # Add header text
-        self.set_font('Arial', 'B', 12)
-        self.cell(0, 10, 'My DataFrame PDF', ln=True, align='C')
-
-    def footer(self):
-        # Add page number
-        self.set_y(-15)
-        self.set_font('Arial', 'I', 8)
-        self.cell(0, 10, f'Page {self.page_no()}', 0, 0, 'C')
-
-# Create a function to download DataFrame as PDF
-def download_as_pdf(df):
-    pdf = PDF()
-    pdf.add_page()
-
-    # Add DataFrame as a table
-    pdf.set_font('Arial', '', 12)
-    for index, row in df.iterrows():
-        pdf.cell(30, 10, str(row['Column 1']), border=1)
-        pdf.cell(30, 10, str(row['Column 2']), border=1)
-        pdf.cell(30, 10, str(row['Column 3']), border=1)
-        pdf.cell(30, 10, str(row['Column 4']), border=1)
-        pdf.cell(30, 10, str(row['Column 5']), border=1)
-        pdf.ln()
-
-    # Generate the PDF file as binary data
-    return pdf.output(dest='S').encode('latin-1')
-
-# Create a download button
-if st.button('Download as PDF'):
-    with st.spinner('Generating PDF...'):
-        pdf_file = download_as_pdf(df)
-        st.success('Download Completed!')
         st.download_button(
-            label='Click to Download',
-            data=pdf_file,
-            file_name='dataframe.pdf',
-            mime='application/pdf'
-        )        
-# def kaart_generator(playlist, seed_num):
-#     random.seed(seed_num)
-#     nums = list(range(1, 51)) 
-#     random.shuffle(nums)
-#     playlist['random'] = nums
-#     new_df = playlist.sort_values("random")
-#     data = list(zip(new_df['title_and_artist'][0:5], 
-#     new_df['title_and_artist'][5:10],
-#     new_df['title_and_artist'][10:15],
-#     new_df['title_and_artist'][15:20],
-#     new_df['title_and_artist'][20:25]))
-#     cols = ['B', 'I','N','G','O']
-#     df2 = pd.DataFrame(data) #, ignore_index=True)
-#     df2.columns = cols
-#     df2['N'][2] = "BINGO"
-#     return df2
+            label="Download data as CSV",
+            data=csv,
+            file_name='bingo_kaarten.csv',
+            mime='text/csv',
+        )
 
-# def bingo_kaarten_generator(playlist, aantal_kaarten, seed_num):
-#     kaarten_list = []
-#     for i in range(0, aantal_kaarten):
-#         kaarten_list.append(kaart_generator(playlist, seed_num + i))
-#     return kaarten_list
+        # Display the first generated bingo card
+        st.table(kaart_generator2(playlist, seed_num))
 
+        # Display the pretty DataFrame in Streamlit
+        st.dataframe(kaart_generator2(playlist, seed_num).style.set_properties(**{'text-align': 'center'}))
 
-# def highlight_bingo(ser):
-#     highlight = 'background-color:#4A707D'
-#     default = ''
-#     return [highlight if 'BINGO' in str(e) else default for e in ser] 
+        # Create a PDF class inheriting from FPDF
+        class PDF(FPDF):
+            def header(self):
+                self.set_font('Arial', 'B', 16)
+                self.cell(0, 10, 'Bingo Cards', ln=True, align='C')
+                self.ln(10)
 
-# df_styled = []
-# for i in range(0, aantal_kaarten):
-#     df_styled.append(bingo_kaarten_generator(playlist, aantal_kaarten, seed_num)[i]
-#      .style     
-#      .hide_index()
-# #      .set_caption("BINGO AURAI")
-#      .set_properties(**{'background-color': 'white',                                                   
-#                                     'color': 'black',                       
-#                                     'border-color': 'white',
-#                                     'text-align': 'center',
-#                                     'text': 'bold', 
-#                                     'font-family': 'Arial', 
-#                                     'font-weight':'bold'})
-# #      .apply(highlight_bingo, axis=0, subset=cols)
-#      .set_table_styles([dict(selector='th', props=[('text-align', 'center')])]))
+            def footer(self):
+                self.set_y(-15)
+                self.set_font('Arial', 'I', 8)
+                self.cell(0, 10, f'Page {self.page_no()}', 0, 0, 'C')
 
-# for i in range(0, aantal_kaarten):
-#     st.dataframe(df_styled[i])
+            def add_table(self, df, card_number):
+                self.set_font('Arial', 'B', 12)
+                self.cell(0, 10, f'Card {card_number}', ln=True, align='C')
+                self.ln(5)
 
+                self.set_font('Arial', '', 12)
+                col_width = self.epw / 5  # distribute content evenly
+                row_height = self.font_size * 1.5
 
+                # Add table header
+                for col_name in df.columns:
+                    self.multi_cell(col_width, row_height, col_name, border=1, align='C', ln=3, max_line_height=self.font_size)
+                self.ln(row_height)
 
-# def kaart_generator2(playlist, seed_num):
-#     random.seed(seed_num)
-#     nums = list(range(1, 51)) 
-#     random.shuffle(nums)
-#     playlist['random'] = nums
-#     new_df = playlist.sort_values("random")
-#     data = list(zip(new_df['title_and_artist'][0:5], 
-#     new_df['title_and_artist'][5:10],
-#     new_df['title_and_artist'][10:15],
-#     new_df['title_and_artist'][15:20],
-#     new_df['title_and_artist'][20:25]))
-#     cols = ['B', 'I','N','G','O']
-#     test = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
-#     test2 = pd.DataFrame(['  ', '  ', '  ', '  ', '  ']).T
-#     df2 = pd.DataFrame(data) #, ignore_index=True)
-#     df2 = df2.append(test, ignore_index=True)
-#     df2 = df2.append(test2, ignore_index=True)
-#     df2.columns = cols
-#     df2['N'][2] = "BINGO"
-#     return df2
-    
-# def bingo_kaarten_generator2(playlist, aantal_kaarten, seed_num):
-#     kaarten_list = []
-#     for i in range(0, aantal_kaarten):
-#         kaarten_list.append(kaart_generator2(playlist, seed_num + i))
-#     return kaarten_list    
+                # Add table rows
+                for row in df.itertuples(index=False):
+                    for cell in row:
+                        self.multi_cell(col_width, row_height, str(cell), border=1, align='C', ln=3, max_line_height=self.font_size)
+                    self.ln(row_height)
 
+        def download_as_pdf(cards):
+            pdf = PDF(orientation='L', unit='mm', format='A4')
+            pdf.add_page()
+            for i, card in enumerate(cards, start=1):
+                pdf.add_table(card, i)
+                pdf.add_page()
 
-    
-# test = pd.concat(bingo_kaarten_generator2(playlist, aantal_kaarten, seed_num))
-    
-# @st.cache
-# def convert_df(df):
-#     # IMPORTANT: Cache the conversion to prevent computation on every rerun
-#     return df.to_csv(index=False, header=False, sep=';').encode('UTF-16')
+            pdf_output = BytesIO()
+            pdf.output(pdf_output)
+            pdf_output.seek(0)
+            return pdf_output
 
-# csv = convert_df(test)
-
-# st.download_button(
-#     label="Download data as CSV",
-#     data=csv,
-#     file_name='bingo_kaarten.csv',
-#     mime='text/csv',
-# )
-
-
-
+        if st.button('Download as PDF'):
+            with st.spinner('Generating PDF...'):
+                pdf_file = download_as_pdf(kaarten_list)
+                st.success('Download Completed!')
+                st.download_button(
+                    label='Click to Download',
+                    data=pdf_file,
+                    file_name='bingo_cards.pdf',
+                    mime='application/pdf'
+                )
