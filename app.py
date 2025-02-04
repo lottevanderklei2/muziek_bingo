@@ -43,24 +43,39 @@ if uploaded_file is not None:
     seed_num = random_seed
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Function to generate bingo cards
+    # # Function to generate bingo cards
+    # def kaart_generator2(playlist, seed_num):
+    #     random.seed(seed_num)
+    #     nums = list(range(1, 51))
+    #     random.shuffle(nums)
+    #     playlist['random'] = nums
+    #     new_df = playlist.sort_values("random")
+    #     data = list(zip(new_df.iloc[0:5]['title_and_artist'],
+    #                     new_df.iloc[5:10]['title_and_artist'],
+    #                     new_df.iloc[10:15]['title_and_artist'],
+    #                     new_df.iloc[15:20]['title_and_artist'],
+    #                     new_df.iloc[20:25]['title_and_artist']))
+    #     cols = ['B', 'I', 'N', 'G', 'O']
+
+    #     df2 = pd.DataFrame(data, columns=cols)
+    #     df2.at[2, 'N'] = "BINGO"
+
+    #     return df2
     def kaart_generator2(playlist, seed_num):
         random.seed(seed_num)
-        nums = list(range(1, 51))
-        random.shuffle(nums)
-        playlist['random'] = nums
-        new_df = playlist.sort_values("random")
-        data = list(zip(new_df.iloc[0:5]['title_and_artist'],
-                        new_df.iloc[5:10]['title_and_artist'],
-                        new_df.iloc[10:15]['title_and_artist'],
-                        new_df.iloc[15:20]['title_and_artist'],
-                        new_df.iloc[20:25]['title_and_artist']))
+        shuffled_playlist = playlist.sample(frac=1, random_state=seed_num).reset_index(drop=True)
+        data = list(zip(shuffled_playlist.iloc[0:5]['title_and_artist'],
+                        shuffled_playlist.iloc[5:10]['title_and_artist'],
+                        shuffled_playlist.iloc[10:15]['title_and_artist'],
+                        shuffled_playlist.iloc[15:20]['title_and_artist'],
+                        shuffled_playlist.iloc[20:25]['title_and_artist']))
+        
         cols = ['B', 'I', 'N', 'G', 'O']
-
         df2 = pd.DataFrame(data, columns=cols)
-        df2.at[2, 'N'] = "BINGO"
+        df2.at[2, 'N'] = "BINGO"  # Center free space
 
         return df2
+
 
     # Card number input box
     st.markdown('<div class="box">', unsafe_allow_html=True)
@@ -109,25 +124,45 @@ if uploaded_file is not None:
                 self.set_font('Arial', 'I', 8)
                 self.cell(0, 10, f'Page {self.page_no()}', 0, 0, 'C')
 
+            # def add_table(self, df, card_number):
+            #     self.set_font('Arial', 'B', 12)
+            #     self.cell(0, 10, f'Card {card_number}', ln=True, align='C')
+            #     self.ln(5)
+
+            #     self.set_font('Arial', '', 12)
+            #     col_width = self.epw / 5  # distribute content evenly
+            #     row_height = self.font_size * 1.5
+
+            #     # Add table header
+            #     for col_name in df.columns:
+            #         self.multi_cell(col_width, row_height, col_name, border=1, align='C', ln=3, max_line_height=self.font_size)
+            #     self.ln(row_height)
+
+            #     # Add table rows
+            #     for row in df.itertuples(index=False):
+            #         for cell in row:
+            #             self.multi_cell(col_width, row_height, str(cell), border=1, align='C', ln=3, max_line_height=self.font_size)
+            #         self.ln(row_height)
             def add_table(self, df, card_number):
-                self.set_font('Arial', 'B', 12)
-                self.cell(0, 10, f'Card {card_number}', ln=True, align='C')
+                self.set_font('Arial', 'B', 14)
+                self.cell(0, 10, f'Bingo Card {card_number}', ln=True, align='C')
                 self.ln(5)
 
-                self.set_font('Arial', '', 12)
-                col_width = self.epw / 5  # distribute content evenly
-                row_height = self.font_size * 1.5
+                self.set_font('Arial', '', 10)
+                col_width = self.epw / 5  # Make sure columns are equal
+                row_height = 10  # Adjust for better spacing
 
-                # Add table header
+                # Table header
                 for col_name in df.columns:
-                    self.multi_cell(col_width, row_height, col_name, border=1, align='C', ln=3, max_line_height=self.font_size)
+                    self.cell(col_width, row_height, col_name, border=1, align='C')
                 self.ln(row_height)
 
-                # Add table rows
+                # Table rows
                 for row in df.itertuples(index=False):
                     for cell in row:
-                        self.multi_cell(col_width, row_height, str(cell), border=1, align='C', ln=3, max_line_height=self.font_size)
+                        self.multi_cell(col_width, row_height * 1.2, str(cell), border=1, align='C')
                     self.ln(row_height)
+
 
         def download_as_pdf(cards):
             pdf = PDF(orientation='L', unit='mm', format='A4')
