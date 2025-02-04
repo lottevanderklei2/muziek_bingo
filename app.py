@@ -31,7 +31,7 @@ st.write('Jouw favoriete nummer is: ', random_seed)
 def kaart_generator(playlist, seed_num):
     random.seed(seed_num)
     shuffled_playlist = playlist.sample(frac=1, random_state=seed_num).reset_index(drop=True)
-    data = [shuffled_playlist.iloc[i * 5:(i + 1) * 5]['title_and_artist'].tolist() for i in range(5)]
+    data = [shuffled_playlist.iloc[i * 5:(i + 1) * 5]['title_and_artist'].tolist() for i in range(6)]
     
     df = pd.DataFrame(data, columns=['B', 'I', 'N', 'G', 'O'])
     df.at[2, 'N'] = "BINGO"  # Center free space
@@ -63,30 +63,30 @@ class PDF(FPDF):
         self.add_page()
         self.set_font('Arial', 'B', 14)
         self.cell(0, 10, f'Bingo Card {card_number}', ln=True, align='C')
-        self.ln(5)
-
+        self.ln(10)
+        
         table_size = 180  # Square table fitting within A4 landscape
         col_width = table_size / 5
-        row_height = table_size / 5 / 2.5  # Adjusted for multi-line text
+        row_height = table_size / 6  # 6 rows for correct sizing
         x_start = (self.w - table_size) / 2
-
+        
         # Table header
         self.set_x(x_start)
         for col_name in df.columns:
             self.cell(col_width, row_height, col_name, border=1, align='C')
         self.ln(row_height)
-
+        
         # Table rows
         self.set_font('Arial', '', 10)
         for row in df.itertuples(index=False):
             self.set_x(x_start)
             for cell in row:
-                self.multi_cell(col_width, row_height, str(cell), border=1, align='C')
+                self.cell(col_width, row_height, str(cell), border=1, align='C')
             self.ln(row_height)
 
 # Generate PDF function
 def generate_pdf(cards):
-    pdf = PDF(orientation='L', unit='mm', format='A4')
+    pdf = PDF(orientation='P', unit='mm', format='A4')  # Portrait mode for better layout
     for i, card in enumerate(cards, start=1):
         pdf.add_table(card, i)
     pdf_output = BytesIO()
