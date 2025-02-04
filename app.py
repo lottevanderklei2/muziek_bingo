@@ -78,11 +78,19 @@ class PDF(FPDF):
         
         # Table rows
         self.set_font('Arial', '', 10)
+        max_lines = 3  # Max lines per cell for wrapping
         for row in df.itertuples(index=False):
-            self.set_x(x_start)
+            cell_heights = []
+            cell_texts = []
             for cell in row:
-                self.cell(col_width, row_height, str(cell), border=1, align='C')
-            self.ln(row_height)
+                text_lines = self.multi_cell(col_width, row_height / max_lines, str(cell), border=0, align='C', split_only=True)
+                cell_heights.append(len(text_lines))
+                cell_texts.append(text_lines)
+            max_cell_height = max(cell_heights) * (row_height / max_lines)
+            self.set_x(x_start)
+            for text_lines in cell_texts:
+                self.multi_cell(col_width, row_height / max_lines, "\n".join(text_lines), border=1, align='C')
+            self.ln(max_cell_height)
 
 # Generate PDF function
 def generate_pdf(cards):
