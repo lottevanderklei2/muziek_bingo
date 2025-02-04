@@ -80,20 +80,9 @@ class PDF(FPDF):
         self.set_font('Arial', '', 10)
         for row in df.itertuples(index=False):
             self.set_x(x_start)
-            y_position = self.get_y()
-            max_cell_height = row_height
-            cell_texts = []
-            
             for cell in row:
-                text_lines = self.multi_cell(col_width, row_height / 3, str(cell), border=0, align='C', split_only=True)
-                max_cell_height = max(max_cell_height, len(text_lines) * (row_height / 3))
-                cell_texts.append("\n".join(text_lines))
-            
-            self.set_y(y_position)
-            for text in cell_texts:
-                self.multi_cell(col_width, row_height / 3, text, border=1, align='C')
-            
-            self.ln(max_cell_height)
+                self.cell(col_width, row_height, str(cell), border=1, align='C')
+            self.ln(row_height)
 
 # Generate PDF function
 def generate_pdf(cards):
