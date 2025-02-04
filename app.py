@@ -78,18 +78,21 @@ class PDF(FPDF):
         
         # Table rows
         self.set_font('Arial', '', 10)
-        max_lines = 3  # Max lines per cell for wrapping
         for row in df.itertuples(index=False):
-            cell_heights = []
-            cell_texts = []
-            for cell in row:
-                text_lines = self.multi_cell(col_width, row_height / max_lines, str(cell), border=0, align='C', split_only=True)
-                cell_heights.append(len(text_lines))
-                cell_texts.append(text_lines)
-            max_cell_height = max(cell_heights) * (row_height / max_lines)
             self.set_x(x_start)
-            for text_lines in cell_texts:
-                self.multi_cell(col_width, row_height / max_lines, "\n".join(text_lines), border=1, align='C')
+            y_position = self.get_y()
+            max_cell_height = row_height
+            cell_texts = []
+            
+            for cell in row:
+                text_lines = self.multi_cell(col_width, row_height / 3, str(cell), border=0, align='C', split_only=True)
+                max_cell_height = max(max_cell_height, len(text_lines) * (row_height / 3))
+                cell_texts.append("\n".join(text_lines))
+            
+            self.set_y(y_position)
+            for text in cell_texts:
+                self.multi_cell(col_width, row_height / 3, text, border=1, align='C')
+            
             self.ln(max_cell_height)
 
 # Generate PDF function
